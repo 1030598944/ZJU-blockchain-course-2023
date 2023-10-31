@@ -59,7 +59,6 @@ contract BorrowYourCar is ERC721{
     function getwhoborrowcar(uint256 id) external view returns(address) {
         return cars[id].borrower;
     }
-
     function updatecar() external {
         for(uint256 i=0;i<borrowcars.length;i++){
             uint256 ca=borrowcars[i];
@@ -72,7 +71,6 @@ contract BorrowYourCar is ERC721{
             }
         }
     }
-
     function borrowcar(uint256 id,uint256 time) external returns(bool) {
         require(cars[id].owner != msg.sender, "You couldn't borrow your own car");
         if(cars[id].borrowUntil!=0){
