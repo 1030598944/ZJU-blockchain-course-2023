@@ -26,14 +26,3 @@
     justify-content: space-between;
     align-items: center;
 }
-.car-list-container {
-    display: flex;
-}
-
-.car-list {
-    display: flex;
-}
-
-.car-item {
-    margin-right: 20px;
-}

@@ -93,7 +93,7 @@ const LotteryPage = () => {
 
     const onClaimTokenAirdrop = async () => {
         if(account === '') {
-            alert('')
+            alert('还没有连接')
             return
         }
 
@@ -156,17 +156,16 @@ const LotteryPage = () => {
 
     const newcar = async () => {
         if(account === '') {
-            alert('未连接到钱包。')
+            alert('还没有连接')
             return
         }
 
         if (borrowYourCarContract && myERC20Contract) {
             try {
-                // 获取一辆新车
                 await borrowYourCarContract.methods.newcar().send({
                     from: account
                 })
-                alert('已加入新车。')
+                alert('已在此账户上加入一辆新车。')
             } catch (error: any) {
                 alert(error.message)
             }
@@ -188,12 +187,12 @@ const LotteryPage = () => {
                 const borrower =  await borrowYourCarContract.methods.getwhoborrowcar(inputfindid).call()
                 if(owner === '0x0000000000000000000000000000000000000000'){
 
-                    alert('该车辆不存在,请检查输入的车辆ID是否正确')
+                    alert('该车辆不存在，可能是id不正确')
                 }
                 else if(borrower === '0x0000000000000000000000000000000000000000'){
-                    alert('车辆ID：' + inputfindid + '\n车主是：' + owner + '\n该车辆当前空闲')
+                    alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n该车辆无人借用')
                 }
-                else alert('车辆ID：' + inputfindid + '\n车主是：' + owner + '\n借用者是：' + borrower)
+                else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
             } catch (error: any) {
                 alert(error.message)
             }
@@ -257,35 +256,35 @@ const LotteryPage = () => {
                     <span>车辆ID：</span>
                     <input type="number"style={{marginRight: '20px'}} value={inputfindid} onChange={e => setinputfindid(e.target.value)} />
                     <Button style={{width: '200px'}} onClick={findid}>查询车辆</Button>
-                    <div>{inputfindid}</div>
                 </div>
                 <div>
                     <span>车辆ID：</span>
                     <input type="number"style={{marginRight: '20px'}} value={inputborrowid} onChange={e => setinputborrowid(e.target.value)} />
                     <input type="number"style={{marginRight: '20px'}} value={inputtime} onChange={e => setinputtime(e.target.value)} />
                     <Button style={{width: '200px'}} onClick={borrowcar}>租借车辆</Button>
-                    <div>{inputfindid}</div>
                 </div>
-                <div>我的车辆</div>
+                <div>自己拥有的车辆</div>
                 <ul>
                     {
                         ownercar.map(car => (
                             <li key={car.tokenId}>
                                 <span>车辆ID:{car.tokenId}</span>
-                                <ImageComponent tokenId={car.tokenId} />
+                                <img src={require(`../../images/${car.tokenId}.jpg`)}/>
                             </li>
                         ))
                     }
                 </ul>
-                <div>空闲的车辆</div>
+                <div>还没有被借用的车辆</div>
                 <ul>
-                    {unborrowcar.map((car) => (
+                    {
+                        unborrowcar.map((car) => (
                         <li key={car.tokenId}>
                             <span>车辆ID：{car.tokenId}</span>
-                            <br></br>
-                            <ImageComponent tokenId={car.tokenId} />
+
+                            <img src={require(`../../images/${car.tokenId}.jpg`)}/>
                         </li>
-                    ))}
+                        ))
+                    }
                 </ul>
 `
             </div>
@@ -293,5 +292,7 @@ const LotteryPage = () => {
 
     )
 }
+
+
 
 export default LotteryPage
