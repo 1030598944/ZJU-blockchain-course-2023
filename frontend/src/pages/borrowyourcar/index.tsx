@@ -201,7 +201,7 @@ const LotteryPage = () => {
                     alert('该车辆不存在，可能是id不正确')
                 }
                 else if(borrower === '0x0000000000000000000000000000000000000000'){
-                    alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n该车辆无人借用')
+                    alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n该车辆暂时无人借用')
                 }
                 // else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
                 else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用'+'\n借用结束时间为'+time+'\n现在时间为'+nowtime)
@@ -221,7 +221,6 @@ const LotteryPage = () => {
 
         if (borrowYourCarContract && myERC20Contract) {
             try {
-                // 获取一辆新车
                 const owner =  await borrowYourCarContract.methods.getowner(inputfindid).call()
                 const borrower =  await borrowYourCarContract.methods.getwhoborrowcar(inputfindid).call()
 
@@ -290,7 +289,7 @@ const LotteryPage = () => {
                     ))
                 }
             </ul>
-            <div>还没有被借用的车辆</div>
+            <div>空闲的车辆</div>
             <ul>
                 {
                     unborrowcar.map((car) => (
