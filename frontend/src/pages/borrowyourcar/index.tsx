@@ -1,10 +1,8 @@
 import {Button, Image} from 'antd';
-import {UserOutlined} from "@ant-design/icons";
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {borrowYourCarContract, myERC20Contract, web3} from "../../utils/contracts";
 import './index.css';
-import ImageComponent from "../../images/ImageCompoent";
 
 const GanacheTestChainId = '0x539' // Ganache默认的ChainId = 0x539 = Hex(1337)
 // TODO change according to your configuration
@@ -16,23 +14,17 @@ const LotteryPage = () => {
     const [account, setAccount] = useState('')
     const [accountBalance, setAccountBalance] = useState(0)
 
-    const [ownercar, setownercar] = useState<Car[]>([]);
+    const [ownercar, setownercar] = useState<string[]>([]);
 
-    const [unborrowcar, setunborrowcar] = useState<Car[]>([]);
+    const [unborrowcar, setunborrowcar] = useState<string[]>([]);
+
+    const [unborrowcar1, setunborrowcar1] = useState<number[]>([]);
 
     const [inputfindid,setinputfindid]=useState<number>(0);
 
     const [inputborrowid,setinputborrowid]=useState<number>(0);
 
     const [inputtime,setinputtime]=useState<number>(0);
-
-    class Car {
-        tokenId: number;
-        constructor(tokenId: number) {
-            this.tokenId = tokenId
-        }
-    }
-
 
     useEffect(() => {
         // 初始化检查用户是否已经连接钱包
@@ -58,13 +50,13 @@ const LotteryPage = () => {
             if (borrowYourCarContract) {
                 let ownerCars = await borrowYourCarContract.methods.getownercar().call({
                     from: account
-                })
-                const updatedMyCars = ownerCars.map((carId: number) => new Car(carId));
-                setownercar(updatedMyCars);
+                });
+                const owne = ownerCars.map(String);
+                setownercar(owne);
                 let unborrowcar = await borrowYourCarContract.methods.getunborrowcar().call({
                     from: account
                 })
-                const u = unborrowcar.map((carId: number) => new Car(carId));
+                const u = unborrowcar.map(String);
                 setunborrowcar(u);
             } else {
                 alert('Contract not exists.')
@@ -90,6 +82,24 @@ const LotteryPage = () => {
             getAccountInfo()
         }
     }, [account])
+    const updatecars = async () => {
+        if(account === '') {
+            alert('未连接到钱包。')
+            return
+        }
+
+        if (borrowYourCarContract && myERC20Contract) {
+            try {
+                await borrowYourCarContract.methods.updatecar().call()
+                alert('更新成功')
+            } catch (error: any) {
+                alert(error.message)
+            }
+        } else {
+            alert('合约不存在')
+        }
+    }
+
 
     const onClaimTokenAirdrop = async () => {
         if(account === '') {
@@ -179,12 +189,13 @@ const LotteryPage = () => {
             alert('未连接到钱包。')
             return
         }
-
+        await updatecars()
         if (borrowYourCarContract && myERC20Contract) {
             try {
-                // 获取一辆新车
                 const owner =  await borrowYourCarContract.methods.getowner(inputfindid).call()
                 const borrower =  await borrowYourCarContract.methods.getwhoborrowcar(inputfindid).call()
+                const time=await borrowYourCarContract.methods.getborrowtime(inputfindid).call()
+                const nowtime=await borrowYourCarContract.methods.getnowtime().call()
                 if(owner === '0x0000000000000000000000000000000000000000'){
 
                     alert('该车辆不存在，可能是id不正确')
@@ -192,7 +203,8 @@ const LotteryPage = () => {
                 else if(borrower === '0x0000000000000000000000000000000000000000'){
                     alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n该车辆无人借用')
                 }
-                else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
+                // else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
+                else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用'+'\n借用结束时间为'+time+'\n现在时间为'+nowtime)
             } catch (error: any) {
                 alert(error.message)
             }
@@ -239,8 +251,6 @@ const LotteryPage = () => {
         }
     }
 
-
-
     return (
         <div className='container'>
             <div className='main'>
@@ -250,44 +260,48 @@ const LotteryPage = () => {
             <div className='account'>
                 {account === '' && <Button onClick={onClickConnectWallet}>连接钱包</Button>}
                 <div>当前用户：{account === '' ? '无用户连接' : account}</div>
-                <div>当前用户拥有浙大币数量：{account === '' ? 0 : accountBalance}</div>
+                <div>当前用户拥有货币数量：{account === '' ? 0 : accountBalance}</div>
+                <Button onClick={updatecars}>更新汽车状态</Button>
                 <Button onClick={newcar}>获取车辆</Button>
-                <div>
-                    <span>车辆ID：</span>
-                    <input type="number"style={{marginRight: '20px'}} value={inputfindid} onChange={e => setinputfindid(e.target.value)} />
-                    <Button style={{width: '200px'}} onClick={findid}>查询车辆</Button>
-                </div>
-                <div>
-                    <span>车辆ID：</span>
-                    <input type="number"style={{marginRight: '20px'}} value={inputborrowid} onChange={e => setinputborrowid(e.target.value)} />
-                    <input type="number"style={{marginRight: '20px'}} value={inputtime} onChange={e => setinputtime(e.target.value)} />
-                    <Button style={{width: '200px'}} onClick={borrowcar}>租借车辆</Button>
-                </div>
-                <div>自己拥有的车辆</div>
-                <ul>
-                    {
-                        ownercar.map(car => (
-                            <li key={car.tokenId}>
-                                <span>车辆ID:{car.tokenId}</span>
-                                <img src={require(`../../images/${car.tokenId}.jpg`)}/>
-                            </li>
-                        ))
-                    }
-                </ul>
-                <div>还没有被借用的车辆</div>
-                <ul>
-                    {
-                        unborrowcar.map((car) => (
-                        <li key={car.tokenId}>
-                            <span>车辆ID：{car.tokenId}</span>
-
-                            <img src={require(`../../images/${car.tokenId}.jpg`)}/>
-                        </li>
-                        ))
-                    }
-                </ul>
-`
             </div>
+            <div>
+                <span>车辆ID：</span>
+                <input type="number" value={inputfindid} onChange={e => setinputfindid(e.target.value)} />
+                <Button onClick={findid}>查车</Button>
+            </div>
+            <div>
+                <span>车辆ID：</span>
+                <input type="number" value={inputborrowid} onChange={e => setinputborrowid(e.target.value)} />
+                <div></div>
+                <span>借用时间</span>
+                <input type="number" value={inputtime} onChange={e => setinputtime(e.target.value)} />
+                <Button onClick={borrowcar}>租车</Button>
+            </div>
+            <div>自己拥有的车辆</div>
+
+            <ul>
+                {
+                    ownercar.map(car => (
+                        <li key={car}>
+                            <span>车辆ID:{car}</span>
+                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
+                            <img src={require(`../../${car}.jpg`)}/>
+                        </li>
+                    ))
+                }
+            </ul>
+            <div>还没有被借用的车辆</div>
+            <ul>
+                {
+                    unborrowcar.map((car) => (
+                        <li key={car}>
+                            <span>车辆ID：{car}</span>
+                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
+                            <img src={require(`../../${car}.jpg`)}/>
+                        </li>
+                    ))
+                }
+            </ul>
         </div>
 
     )

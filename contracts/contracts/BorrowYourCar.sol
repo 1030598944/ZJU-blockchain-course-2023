@@ -59,35 +59,54 @@ contract BorrowYourCar is ERC721{
     function getwhoborrowcar(uint256 id) external view returns(address) {
         return cars[id].borrower;
     }
+    function getborrowtime(uint256 id) external view returns(uint256) {
+        return cars[id].borrowUntil;
+    }
+    function getnowtime()external view returns(uint256){
+        return block.timestamp;
+    }
     function updatecar() external {
         for(uint256 i=0;i<borrowcars.length;i++){
             uint256 ca=borrowcars[i];
-            if(cars[ca].borrowUntil<=block.timestamp){
+            if(cars[ca].borrowUntil<=block.timestamp&&i!=borrowcars.length-1){
                 cars[ca].borrower=address(0);
                 cars[ca].borrowUntil=0;
                 borrowcars[i]=borrowcars[borrowcars.length-1];
+                borrowcars.pop();
+                unborrowcars.push(ca);
+
+            }
+            else if(cars[ca].borrowUntil<=block.timestamp&&i==borrowcars.length-1){
+                cars[ca].borrower=address(0);
+                cars[ca].borrowUntil=0;
                 borrowcars.pop();
                 unborrowcars.push(ca);
             }
         }
     }
     function borrowcar(uint256 id,uint256 time) external returns(bool) {
-        require(cars[id].owner != msg.sender, "You couldn't borrow your own car");
+        require(cars[id].owner != msg.sender,"you can't borrow your own car");
         if(cars[id].borrowUntil!=0){
             return false;
         }
-        require(cars[id].borrowUntil==0,"This car is borrowing");
+        require(cars[id].borrowUntil==0,"this car has been borrowed");
         uint256 money=time;
-        require(myERC20.balanceOf(msg.sender) >= money, "You don't have enough money");
+        require(myERC20.balanceOf(msg.sender) >= money, "you don't have enough money");
         myERC20.transferFrom(msg.sender,cars[id].owner,money);
         cars[id].borrowUntil=block.timestamp+time;
         cars[id].borrower=msg.sender;
         borrowcars.push(id);
         for(uint256 i=0;i<unborrowcars.length;i++){
-            if(unborrowcars[i]==id){
+            if(unborrowcars[i]==id&&i!=unborrowcars.length-1){
                 unborrowcars[i]=unborrowcars[unborrowcars.length-1];
                 unborrowcars.pop();
                 break;
+            }
+            else{
+                if(unborrowcars[i]==id&&i==unborrowcars.length-1){
+                    unborrowcars.pop();
+                    break;
+                }
             }
         }
         return true;
