@@ -284,8 +284,8 @@ const LotteryPage = () => {
                     ownercar.map(car => (
                         <li key={car}>
                             <span>车辆ID:{car}</span>
-                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
-                            <img src={require(`../../${car}.jpg`)}/>
+                            <img src={require(`../../images/${car}.jpg`)}/>
+                            {/*<img src={require(`../../${car}.jpg`)}/>*/}
                         </li>
                     ))
                 }
@@ -296,8 +296,8 @@ const LotteryPage = () => {
                     unborrowcar.map((car) => (
                         <li key={car}>
                             <span>车辆ID：{car}</span>
-                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
-                            <img src={require(`../../${car}.jpg`)}/>
+                            <img src={require(`../../images/${car}.jpg`)}/>
+                            {/*<img src={require(`../../${car}.jpg`)}/>*/}
                         </li>
                     ))
                 }
