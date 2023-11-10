@@ -166,7 +166,7 @@ const LotteryPage = () => {
 
     const newcar = async () => {
         if(account === '') {
-            alert('还没有连接')
+            alert('You have not connected wallet yet.')
             return
         }
 
@@ -180,7 +180,7 @@ const LotteryPage = () => {
                 alert(error.message)
             }
         } else {
-            alert('合约不存在')
+            alert('Contract not exists.')
         }
     }
 
