@@ -85,11 +85,12 @@ contract BorrowYourCar is ERC721{
         }
     }
     function borrowcar(uint256 id,uint256 time) external returns(bool) {
+        require(cars[id].borrowUntil==0,"this car has been borrowed");
         require(cars[id].owner != msg.sender,"you can't borrow your own car");
         if(cars[id].borrowUntil!=0){
             return false;
         }
-        require(cars[id].borrowUntil==0,"this car has been borrowed");
+
         uint256 money=time;
         require(myERC20.balanceOf(msg.sender) >= money, "you don't have enough money");
         myERC20.transferFrom(msg.sender,cars[id].owner,money);

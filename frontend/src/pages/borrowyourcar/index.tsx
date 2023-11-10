@@ -201,10 +201,10 @@ const LotteryPage = () => {
                     alert('该车辆不存在，可能是id不正确')
                 }
                 else if(borrower === '0x0000000000000000000000000000000000000000'){
-                    alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n该车辆暂时无人借用')
+                    alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'该车辆暂时无人借用')
                 }
                 // else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
-                else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用'+'\n借用结束时间为'+time+'\n现在时间为'+nowtime)
+                else alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'现在被' + borrower+'借用'+'\n'+'借用结束时间为'+time+'\n'+'现在时间为'+nowtime)
             } catch (error: any) {
                 alert(error.message)
             }
@@ -226,7 +226,7 @@ const LotteryPage = () => {
 
                 if(owner === '0x0000000000000000000000000000000000000000'){
 
-                    alert('该车辆不存在,请检查输入的车辆ID是否正确')
+                    alert('该车辆ID不存在')
                 }
                 else if(owner===account){
                     alert('你不能借自己的车')
@@ -264,15 +264,15 @@ const LotteryPage = () => {
                 <Button onClick={newcar}>获取车辆</Button>
             </div>
             <div>
-                <span>车辆ID：</span>
+                <div>车辆ID：</div>
                 <input type="number" value={inputfindid} onChange={e => setinputfindid(e.target.value)} />
                 <Button onClick={findid}>查车</Button>
             </div>
             <div>
-                <span>车辆ID：</span>
+                <div>车辆ID：</div>
                 <input type="number" value={inputborrowid} onChange={e => setinputborrowid(e.target.value)} />
                 <div></div>
-                <span>借用时间</span>
+                <div>借用时间</div>
                 <input type="number" value={inputtime} onChange={e => setinputtime(e.target.value)} />
                 <Button onClick={borrowcar}>租车</Button>
             </div>
@@ -282,7 +282,7 @@ const LotteryPage = () => {
                 {
                     ownercar.map(car => (
                         <li key={car}>
-                            <span>车辆ID:{car}</span>
+                            <div>车辆ID:{car}</div>
                             <img src={require(`../../images/${car}.jpg`)}/>
                             {/*<img src={require(`../../${car}.jpg`)}/>*/}
                         </li>
@@ -294,7 +294,7 @@ const LotteryPage = () => {
                 {
                     unborrowcar.map((car) => (
                         <li key={car}>
-                            <span>车辆ID：{car}</span>
+                            <div>车辆ID：{car}</div>
                             <img src={require(`../../images/${car}.jpg`)}/>
                             {/*<img src={require(`../../${car}.jpg`)}/>*/}
                         </li>
