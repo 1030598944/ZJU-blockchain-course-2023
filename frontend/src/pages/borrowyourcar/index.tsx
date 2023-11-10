@@ -84,7 +84,7 @@ const LotteryPage = () => {
     }, [account])
     const updatecars = async () => {
         if(account === '') {
-            alert('未连接到钱包。')
+            alert('You have not connected wallet yet.')
             return
         }
 
@@ -96,14 +96,14 @@ const LotteryPage = () => {
                 alert(error.message)
             }
         } else {
-            alert('合约不存在')
+            alert('Contract not exists.')
         }
     }
 
 
     const onClaimTokenAirdrop = async () => {
         if(account === '') {
-            alert('还没有连接')
+            alert('You have not connected wallet yet.')
             return
         }
 
@@ -118,7 +118,7 @@ const LotteryPage = () => {
             }
 
         } else {
-            alert('合约不存在')
+            alert('Contract not exists.')
         }
     }
 
@@ -186,7 +186,7 @@ const LotteryPage = () => {
 
     const findid = async () => {
         if(account === '') {
-            alert('未连接到钱包。')
+            alert('You have not connected wallet yet.')
             return
         }
         await updatecars()
@@ -197,25 +197,23 @@ const LotteryPage = () => {
                 const time=await borrowYourCarContract.methods.getborrowtime(inputfindid).call()
                 const nowtime=await borrowYourCarContract.methods.getnowtime().call()
                 if(owner === '0x0000000000000000000000000000000000000000'){
-
-                    alert('该车辆不存在，可能是id不正确')
+                    alert('该车辆不存在')
                 }
                 else if(borrower === '0x0000000000000000000000000000000000000000'){
                     alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'该车辆暂时无人借用')
                 }
-                // else alert('车辆ID：' + inputfindid + '\n车主ID：' + owner + '\n现在被' + borrower+'借用')
                 else alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'现在被' + borrower+'借用'+'\n'+'借用结束时间为'+time+'\n'+'现在时间为'+nowtime)
             } catch (error: any) {
                 alert(error.message)
             }
         } else {
-            alert('合约不存在')
+            alert('Contract not exists.')
         }
     }
 
     const borrowcar = async () => {
         if(account === '') {
-            alert('未连接到钱包。')
+            alert('You have not connected wallet yet.')
             return
         }
 
@@ -226,7 +224,7 @@ const LotteryPage = () => {
 
                 if(owner === '0x0000000000000000000000000000000000000000'){
 
-                    alert('该车辆ID不存在')
+                    alert('该车辆不存在')
                 }
                 else if(owner===account){
                     alert('你不能借自己的车')
@@ -246,7 +244,7 @@ const LotteryPage = () => {
                 alert(error.message)
             }
         } else {
-            alert('合约不存在')
+            alert('Contract not exists.')
         }
     }
 
