@@ -99,8 +99,6 @@ const LotteryPage = () => {
             alert('Contract not exists.')
         }
     }
-
-
     const onClaimTokenAirdrop = async () => {
         if(account === '') {
             alert('You have not connected wallet yet.')
@@ -121,7 +119,6 @@ const LotteryPage = () => {
             alert('Contract not exists.')
         }
     }
-
     const onClickConnectWallet = async () => {
         // 查看window对象里是否存在ethereum（metamask安装后注入的）对象
         // @ts-ignore
@@ -163,7 +160,6 @@ const LotteryPage = () => {
             alert(error.message)
         }
     }
-
     const newcar = async () => {
         if(account === '') {
             alert('You have not connected wallet yet.')
@@ -199,10 +195,10 @@ const LotteryPage = () => {
                 if(owner === '0x0000000000000000000000000000000000000000'){
                     alert('该车辆不存在')
                 }
-                else if(borrower === '0x0000000000000000000000000000000000000000'){
-                    alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'该车辆暂时无人借用')
+                else if(time === '0'){
+                    alert('车辆ID' + inputfindid + '\n'+'车主ID' + owner + '\n'+'该车辆暂时无人借用')
                 }
-                else alert('车辆ID：' + inputfindid + '\n'+'车主ID：' + owner + '\n'+'现在被' + borrower+'借用'+'\n'+'借用结束时间为'+time+'\n'+'现在时间为'+nowtime)
+                else alert('车辆ID' + inputfindid + '\n'+'车主ID' + owner + '\n'+'现在被' + borrower+'借用'+'\n'+'借用结束时间为'+time+'\n'+'现在时间为'+nowtime)
             } catch (error: any) {
                 alert(error.message)
             }
@@ -221,6 +217,7 @@ const LotteryPage = () => {
             try {
                 const owner =  await borrowYourCarContract.methods.getowner(inputfindid).call()
                 const borrower =  await borrowYourCarContract.methods.getwhoborrowcar(inputfindid).call()
+                const borroweruilt=await borrowYourCarContract.methods.getborrowtime(inputfindid).call()
 
                 if(owner === '0x0000000000000000000000000000000000000000'){
 
@@ -229,17 +226,16 @@ const LotteryPage = () => {
                 else if(owner===account){
                     alert('你不能借自己的车')
                 }
-                else if(borrower === '0x0000000000000000000000000000000000000000'){
+                else if(borroweruilt === '0'){
                     await myERC20Contract.methods.approve(borrowYourCarContract.options.address,inputtime).send({
                         from: account
                     })
-                    //借用车辆
                     await borrowYourCarContract.methods.borrowcar(inputborrowid, inputtime).send({
                         from: account
                     })
                     alert('借用成功。')
                 }
-                else alert('车辆ID：' + inputfindid + '\n车主是：' + owner + '\n借用者是：' + borrower)
+                else alert('车辆ID' + inputfindid + '\n'+'车ID' + owner + '\n'+'现在被' + borrower+'借用')
             } catch (error: any) {
                 alert(error.message)
             }
@@ -262,12 +258,12 @@ const LotteryPage = () => {
                 <Button onClick={newcar}>获取车辆</Button>
             </div>
             <div>
-                <div>车辆ID：</div>
+                <div>车辆</div>
                 <input type="number" value={inputfindid} onChange={e => setinputfindid(e.target.value)} />
                 <Button onClick={findid}>查车</Button>
             </div>
             <div>
-                <div>车辆ID：</div>
+                <div>车辆</div>
                 <input type="number" value={inputborrowid} onChange={e => setinputborrowid(e.target.value)} />
                 <div></div>
                 <div>借用时间</div>
@@ -280,8 +276,8 @@ const LotteryPage = () => {
                 {
                     ownercar.map(car => (
                         <li key={car}>
-                            <div>车辆ID:{car}</div>
-                            <img src={require(`../../images/${car}.jpg`)}/>
+                            <div>车辆ID{car}</div>
+                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
                             {/*<img src={require(`../../${car}.jpg`)}/>*/}
                         </li>
                     ))
@@ -292,9 +288,9 @@ const LotteryPage = () => {
                 {
                     unborrowcar.map((car) => (
                         <li key={car}>
-                            <div>车辆ID：{car}</div>
-                            <img src={require(`../../images/${car}.jpg`)}/>
-                            {/*<img src={require(`../../${car}.jpg`)}/>*/}
+                            <div>车辆ID{car}</div>
+                            {/*<img src={require(`../../images/${car}.jpg`)}/>*/}
+                            <img src={require(`../../${car}.jpg`)}/>
                         </li>
                     ))
                 }
