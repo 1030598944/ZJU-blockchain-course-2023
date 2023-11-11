@@ -75,27 +75,26 @@
 ![img.png](img.png)
 
 进入网页后，还无账户连接
-![img_1.png](img_1.png)
+![img_10.png](img_10.png)
 
 连接上账户后
-![img_2.png](img_2.png)
+![img_11.png](img_11.png)
 
 点击领取空投可领取自己发行的货币
-![img_3.png](img_3.png)
+![img_12.png](img_12.png)
 
 点击更新汽车状态可以更新汽车
 点击获取车辆可以在当前账户上增加一辆车（图片我现在专门注释掉没有显示如果想显示图片可以）
-![img_4.png](img_4.png)
+![img_13.png](img_13.png)
 
-用另一个账户去查询车
-![img_5.png](img_5.png)
-![img_6.png](img_6.png)
+查询车
+![img_14.png](img_14.png)
 
 然后借用车1小时，再查询该车辆，可以看到用户货币也减少了1
-![img_7.png](img_7.png)
+![img_15.png](img_15.png)
 
 下图是有图片的场景
-![img_8.png](img_8.png)
+![img_16.png](img_16.png)
 
 ## 参考内容
 
